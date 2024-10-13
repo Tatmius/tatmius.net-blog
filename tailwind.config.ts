@@ -1,5 +1,6 @@
 import animate from "tailwindcss-animate";
 import typography from "@tailwindcss/typography";
+import type { PluginAPI } from "tailwindcss/types/config";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -76,7 +77,7 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
-      typography: (theme) => ({
+      typography: (theme: PluginAPI["theme"]) => ({
         DEFAULT: {
           css: {
             "h1, h2, h3, h4, h5, h6, p, li, ol, ul, blockquote": {
