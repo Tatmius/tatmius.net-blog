@@ -5,7 +5,6 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { getMessages } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
-
 const inter = Inter({ subsets: ["latin"] });
 
 const notoSansJP = Noto_Sans_JP({

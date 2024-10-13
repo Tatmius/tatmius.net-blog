@@ -1,14 +1,15 @@
 ブログを作ってみました。どうせあんまり投稿しない+インタラクティブな要素があるブログを作りたいなぁという事で、
 micro CMS ではなく、Next.js と next-intl/mdx でブログを作りました。
 
-hosting は cloudlare pages で、github に push するだけでデプロイできるようにしています。
-ブログ記事自体も git で管理されるという感じです。
+hosting は 最初 cloudlare pages にしようと思っていましたが、next-intl と cloudflare pages の相性が悪い(static rendering しないといけない)ので、諦めて自宅鯖ですることにしました。
 
 今後記事数が増えれば、micro CMS にするかもしれませんが、その場合のインテグレーションとか、
 今の段階では全然想像ついてません。タグの機能があったり、そっちの方が良いのかもなぁって思ったりはしますが、
 複雑そうなので、また今度にします。
 
-## 作り方
+## 作り方の備忘録
+
+あんまり正確に書いてないので、詳細は[github のリポジトリ](https://github.com/Tatmius/tatmius.net-blog)を見てください。
 
 1. プロジェクト作成
 
@@ -120,7 +121,7 @@ npm install @next/mdx @mdx-js/loader @mdx-js/react @types/mdx
 npm install rehype-highlight highlight.js
 ```
 
-をした後に以下の mdx-components.tsx を/src に追加
+以下の mdx-components.tsx を/src に追加
 
 ```tsx src/mdx-components.tsx
 import type { MDXComponents } from "mdx/types";
@@ -176,3 +177,7 @@ export function MdxWrapper({ children }: MdxWrapperProps) {
   );
 }
 ```
+
+## おわりに
+
+ほぼ V0 で生成しました(next-intl と MDX 周りはドキュメント読んでやったけど)。すごいっすね。

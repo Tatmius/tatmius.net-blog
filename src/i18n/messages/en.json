@@ -8,12 +8,6 @@
         "excerpt": "Created a blog using Next.js with next-intl and MDX.",
         "date": "2024-10-10",
         "slug": "20241010-firstPost"
-      },
-      "2": {
-        "title": "What is MDX?",
-        "excerpt": "MDX is a Markdown syntax extension that allows you to write JSX in Markdown files.",
-        "date": "2024-10-12",
-        "slug": "20241012-mdxtest"
       }
     }
   }

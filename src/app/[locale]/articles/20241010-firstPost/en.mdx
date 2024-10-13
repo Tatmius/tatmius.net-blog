@@ -1,22 +1,182 @@
-# Getting Started with Next.js
+I decided to create a blog. Since I probably won't post very often and I wanted to make a blog with interactive elements, I chose to build it using Next.js and next-intl/mdx instead of micro CMS.
 
-_October 10, 2024_
+Initially, I planned to host it on Cloudflare Pages. However, due to compatibility issues between next-intl and Cloudflare Pages (which requires static rendering), I abandoned that idea and decided to host it on my home server instead.
 
-This is my first post. This blog is created using Next.js with next-intl/mdx.
+In the future, if the number of articles increases, I might switch to micro CMS. At this point, though, I can't really imagine how that integration would work. I do think that having features like tagging might be beneficial, but it seems complicated, so I'll leave that for another time.
 
-## What I wanted to do
+> **Note**
+>
+> This English article is translated by claude sonnet 3.5. in cursor.
 
-There are several blog platforms or micro CMSs. However, I wanted to create a blog which have very interactive pages.
-To do that, I needed a way to render a interactive components.
-I'm not sure if I can call it micro CMS but it seems to be very comprehensive.
-And I assume that my pace of writing blog posts will be very slow. So I thought it would be better to implement blog without CMS or database.
-That's why I create my blog just with Next.js and next-intl/mdx.
-The every blog posts are just mdx files and it's in the nextjs project.
+## Development Process Notes
 
-## Setting Up Your First Next.js Project
+This is not a detailed guide, so please refer to the [GitHub repository](https://github.com/Tatmius/tatmius.net-blog) for more specific information.
 
-To create a new Next.js project, you can use the following command:
+1. Project Creation
 
 ```bash
-npx create-next-app my-next-app
+npx create-next-app {project-name}
 ```
+
+2. Project with next-intl installation
+
+Basically, I am following the method [next-intl and app router](https://next-intl-docs.vercel.app/docs/getting-started/app-router/with-i18n-routing).
+
+```bash
+cd {project-name}
+npm install next-intl
+```
+
+Regarding directory structure, the documentation suggests creating a `messages` directory at the same level as `src` and placing translation files inside it. However, in this case, we are placing translation files related to the blog, such as header links, in `src/i18n/messages`.
+
+Blog articles are stored in `src/app/[locale]/articles/[slug]/[locale].mdx` files, each with its own translation file in the corresponding directory.
+
+This results in the following file structure:
+
+```bash
+├── next.config.mjs
+└── src
+    ├── i18n
+    │   ├── messages
+    │   │   ├── en.json
+    │   │   └── ja.json
+    │   ├── routing.ts
+    │   └── request.ts
+    ├── middleware.ts
+    └── app
+        └── [locale]
+            ├── layout.tsx
+            └── page.tsx
+            └── articles
+                └── [slug]
+                    └── page.tsx
+                └── [それぞれの記事]
+                    └── [locale].mdx
+```
+
+3. routing.ts, request.ts, middleware.ts creation
+
+I am copying the code from the documentation. I am changing the import path for the locale in request.ts.
+
+↓ src/i18n/routing.ts
+
+```ts src/i18n/routing.ts
+import { defineRouting } from "next-intl/routing";
+import { createSharedPathnamesNavigation } from "next-intl/navigation";
+
+export const routing = defineRouting({
+  // A list of all locales that are supported
+  locales: ["en", "ja"],
+
+  // Used when no locale matches
+  defaultLocale: "en",
+});
+
+// Lightweight wrappers around Next.js' navigation APIs
+// that will consider the routing configuration
+export const { Link, redirect, usePathname, useRouter } =
+  createSharedPathnamesNavigation(routing);
+```
+
+↓ src/i18n/request.ts
+
+```ts src/i18n/request.ts
+import { notFound } from "next/navigation";
+import { getRequestConfig } from "next-intl/server";
+import { routing } from "./routing";
+
+export default getRequestConfig(async ({ locale }) => {
+  // Validate that the incoming `locale` parameter is valid
+  if (!routing.locales.includes(locale as any)) notFound();
+
+  return {
+    messages: (await import(`./messages/${locale}.json`)).default,
+  };
+});
+```
+
+↓ src/middleware.ts
+
+```ts src/middleware.ts
+import createMiddleware from "next-intl/middleware";
+import { routing } from "./i18n/routing";
+
+export default createMiddleware(routing);
+
+export const config = {
+  // Match only internationalized pathnames
+  matcher: ["/", "/(ja|en)/:path*"],
+};
+```
+
+## MDX Settings
+
+I am following the official documentation [next-intl-docs.vercel.app/docs/environments/mdx](https://next-intl-docs.vercel.app/docs/environments/mdx). I also created `src/components/MdxWrapper.tsx` for rendering MDX files (otherwise, CSS wouldn't work properly).
+
+I am installing the necessary packages:
+
+```bash
+npm install @next/mdx @mdx-js/loader @mdx-js/react @types/mdx
+npm install rehype-highlight highlight.js
+```
+
+I am adding the following `mdx-components.tsx` to `/src`:
+
+```tsx src/mdx-components.tsx
+import type { MDXComponents } from "mdx/types";
+
+export function useMDXComponents(components: MDXComponents): MDXComponents {
+  return {
+    ...components,
+  };
+}
+```
+
+I am updating `next.config.mjs` to include next-intl and MDX:
+
+```tsx next.config.mjs
+import createNextIntlPlugin from "next-intl/plugin";
+import createMDX from "@next/mdx";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
+
+const withNextIntl = createNextIntlPlugin();
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
+};
+
+const withMDX = createMDX({
+  // Add markdown plugins here, as desired
+  options: {
+    remarkPlugins: [remarkGfm],
+    rehypePlugins: [rehypeHighlight],
+  },
+});
+
+export default withNextIntl(withMDX(nextConfig));
+```
+
+I created `MdxWrapper.tsx` to fix the MDX CSS issue:
+
+```tsx src/components/MdxWrapper.tsx
+import React from "react";
+import "highlight.js/styles/github-dark.css";
+
+interface MdxWrapperProps {
+  children: React.ReactNode;
+}
+
+export function MdxWrapper({ children }: MdxWrapperProps) {
+  return (
+    <div className="prose prose-custom dark:prose-custom-dark prose-sm sm:prose sm:max-w-none md:prose-base lg:prose-lg max-w-none mx-4 sm:mx-6 md:mx-12 lg:mx-24 xl:mx-60 mt-4">
+      {children}
+    </div>
+  );
+}
+```
+
+## Conclusion
+
+This blog was basically generated by V0 (next-intl and MDX related parts were done by reading the documentation). It's fascinating.

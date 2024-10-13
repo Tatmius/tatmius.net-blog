@@ -1,7 +1,7 @@
 import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-
+import { ArticleActions } from "@/components/articleActions";
 interface ArticleLayoutProps {
   children: React.ReactNode;
   title: string;
@@ -26,6 +26,7 @@ export function ArticleLayout({ children, title, date }: ArticleLayoutProps) {
         {date}
       </time>
       <div>{children}</div>
+      <ArticleActions />
     </article>
   );
 }
