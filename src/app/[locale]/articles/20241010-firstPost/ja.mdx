@@ -1,0 +1,178 @@
+ブログを作ってみました。どうせあんまり投稿しない+インタラクティブな要素があるブログを作りたいなぁという事で、
+micro CMS ではなく、Next.js と next-intl/mdx でブログを作りました。
+
+hosting は cloudlare pages で、github に push するだけでデプロイできるようにしています。
+ブログ記事自体も git で管理されるという感じです。
+
+今後記事数が増えれば、micro CMS にするかもしれませんが、その場合のインテグレーションとか、
+今の段階では全然想像ついてません。タグの機能があったり、そっちの方が良いのかもなぁって思ったりはしますが、
+複雑そうなので、また今度にします。
+
+## 作り方
+
+1. プロジェクト作成
+
+```bash
+npx create-next-app {project-name}
+```
+
+2. プロジェクトに next-intl をインストール
+
+基本的には　[next-intl と app router を使用する方法](https://next-intl-docs.vercel.app/docs/getting-started/app-router/with-i18n-routing) を参考にしています。
+
+```bash
+cd {project-name}
+npm install next-intl
+```
+
+ディレクトリ構成に関して、ドキュメントでは翻訳ファイルは`src`と同じ階層に`messages`というディレクトリを作ってその中に置くように書いていますが、
+今回はブログ全体に関わる翻訳ファイル(例えばヘッダーのリンクの文字列など)は`src/i18n/messages`以下に置くようにしています。
+
+ブログの記事自体は`src/app/[locale]/articles/[slug]/[locale].mdx`というファイルとして各言語ごとに配置します。
+これによって、それぞれの記事の翻訳ファイルが記事毎のディレクトリに配置されます。
+最終的には以下のようなファイル構成になります。
+
+```bash
+├── next.config.mjs
+└── src
+    ├── i18n
+    │   ├── messages
+    │   │   ├── en.json
+    │   │   └── ja.json
+    │   ├── routing.ts
+    │   └── request.ts
+    ├── middleware.ts
+    └── app
+        └── [locale]
+            ├── layout.tsx
+            └── page.tsx
+            └── articles
+                └── [slug]
+                    └── page.tsx
+                └── [それぞれの記事]
+                    └── [locale].mdx
+```
+
+3. routing.ts, request.ts, middleware.ts を作成
+
+ドキュメントに載ってるやつをそのままコピペします。request.ts の locale の import path のみ変更します。
+
+↓ src/i18n/routing.ts
+
+```ts src/i18n/routing.ts
+import { defineRouting } from "next-intl/routing";
+import { createSharedPathnamesNavigation } from "next-intl/navigation";
+
+export const routing = defineRouting({
+  // A list of all locales that are supported
+  locales: ["en", "ja"],
+
+  // Used when no locale matches
+  defaultLocale: "en",
+});
+
+// Lightweight wrappers around Next.js' navigation APIs
+// that will consider the routing configuration
+export const { Link, redirect, usePathname, useRouter } =
+  createSharedPathnamesNavigation(routing);
+```
+
+↓ src/i18n/request.ts
+
+```ts src/i18n/request.ts
+import { notFound } from "next/navigation";
+import { getRequestConfig } from "next-intl/server";
+import { routing } from "./routing";
+
+export default getRequestConfig(async ({ locale }) => {
+  // Validate that the incoming `locale` parameter is valid
+  if (!routing.locales.includes(locale as any)) notFound();
+
+  return {
+    messages: (await import(`./messages/${locale}.json`)).default,
+  };
+});
+```
+
+↓ src/middleware.ts
+
+```ts src/middleware.ts
+import createMiddleware from "next-intl/middleware";
+import { routing } from "./i18n/routing";
+
+export default createMiddleware(routing);
+
+export const config = {
+  // Match only internationalized pathnames
+  matcher: ["/", "/(ja|en)/:path*"],
+};
+```
+
+## MDX の設定
+
+これも[公式ドキュメント](https://next-intl-docs.vercel.app/docs/environments/mdx)を参考にしています。
+また、MDX ファイルをレンダリングする為に`src/components/MdxWrapper.tsx`を作成しました(ないと CSS が良い感じにならなかった)
+
+どうせコードも書くので、syntax highlight も入れます。
+
+```bash
+npm install @next/mdx @mdx-js/loader @mdx-js/react @types/mdx
+npm install rehype-highlight highlight.js
+```
+
+をした後に以下の mdx-components.tsx を/src に追加
+
+```tsx src/mdx-components.tsx
+import type { MDXComponents } from "mdx/types";
+
+export function useMDXComponents(components: MDXComponents): MDXComponents {
+  return {
+    ...components,
+  };
+}
+```
+
+next.config.mjs も next-intl と合わせて以下のようにします。
+
+```tsx next.config.mjs
+import createNextIntlPlugin from "next-intl/plugin";
+import createMDX from "@next/mdx";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
+
+const withNextIntl = createNextIntlPlugin();
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
+};
+
+const withMDX = createMDX({
+  // Add markdown plugins here, as desired
+  options: {
+    remarkPlugins: [remarkGfm],
+    rehypePlugins: [rehypeHighlight],
+  },
+});
+
+export default withNextIntl(withMDX(nextConfig));
+```
+
+そのままでは MDX の CSS が表示されなかったので、MdxWrapper.tsx を作成しました。
+
+```tsx src/components/MdxWrapper.tsx
+import React from "react";
+import "highlight.js/styles/github-dark.css";
+
+interface MdxWrapperProps {
+  children: React.ReactNode;
+}
+
+export function MdxWrapper({ children }: MdxWrapperProps) {
+  return (
+    <div className="prose prose-custom dark:prose-custom-dark prose-sm sm:prose sm:max-w-none md:prose-base lg:prose-lg max-w-none mx-4 sm:mx-6 md:mx-12 lg:mx-24 xl:mx-60 mt-4">
+      {children}
+    </div>
+  );
+}
+```

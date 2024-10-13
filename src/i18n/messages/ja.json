@@ -1,0 +1,20 @@
+{
+  "home": {
+    "title": "tatmius's ブログ",
+    "description": "これはホームページです",
+    "articles": {
+      "1": {
+        "title": "最初のブログポスト",
+        "excerpt": "Next.jsをベースにnext-intl/mdxを使ってブログを作りました。",
+        "date": "2024-10-10",
+        "slug": "20241010-firstPost"
+      },
+      "2": {
+        "title": "MDXとは？",
+        "excerpt": "MDXはMarkdownの構文拡張で、MarkdownファイルにJSXを書くことができます。",
+        "date": "2024-10-12",
+        "slug": "20241012-mdxtest"
+      }
+    }
+  }
+}
