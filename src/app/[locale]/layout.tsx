@@ -1,47 +1,33 @@
-import "./globals.css";
-import { Inter, Noto_Sans_JP } from "next/font/google";
-import { ThemeProvider } from "@/components/theme-provider";
-import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
-import { getMessages } from "next-intl/server";
-import { NextIntlClientProvider } from "next-intl";
-const inter = Inter({ subsets: ["latin"] });
+import "@/app/globals.css";
+import { HtmlLangSetter } from "@/components/html-lang-setter";
+import type { Metadata } from "next";
 
-const notoSansJP = Noto_Sans_JP({
-  subsets: ["latin"],
-  weight: ["200", "400", "700"],
-  variable: "--font-noto-sans-jp",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    alternates: {
+      languages: {
+        en: "https://tatmius.net/en/",
+        ja: "https://tatmius.net/ja/",
+      },
+    },
+  };
+}
 
-export const metadata = {
-  title: "tatmius's blog",
-  description: "A blog about what I'm interested in",
-};
+export async function generateStaticParams() {
+  return [{ locale: "en" }, { locale: "ja" }];
+}
 
-export default async function RootLayout({
+export default function LocaleLayout({
   children,
-  params: { locale },
+  params,
 }: {
   children: React.ReactNode;
   params: { locale: string };
 }) {
-  const messages = await getMessages({ locale });
-
   return (
-    <html lang={locale} suppressHydrationWarning>
-      <body className={`${inter.className} ${notoSansJP.variable}`}>
-        <NextIntlClientProvider messages={messages}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <div className="flex flex-col min-h-screen">
-              <Header />
-
-              <div className="flex-grow">{children}</div>
-
-              <Footer />
-            </div>
-          </ThemeProvider>
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <>
+      <HtmlLangSetter lang={params?.locale} />
+      {children}
+    </>
   );
 }

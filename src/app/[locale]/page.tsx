@@ -1,51 +1,62 @@
-import { Link } from "@/i18n/routing";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
-import { Articles } from "@/type";
+import Link from "next/link";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import articlesData from "@/data/articles.json";
 
-export default function Home() {
-  const t = useTranslations("home");
+interface Article {
+  slug: string;
+  date: string;
+  [locale: string]:
+    | {
+        title: string;
+        excerpt: string;
+      }
+    | string;
+}
 
-  const articlesObj: Articles = t.raw("articles");
-  const articles = Object.entries(articlesObj).map(([id, article]) => ({
-    id,
-    title: article.title,
-    excerpt: article.excerpt,
-    date: article.date,
-    slug: article.slug,
-  }));
-  console.log("articles:", articles);
+interface ArticlesData {
+  [key: string]: Article;
+}
+
+export default function Home({
+  params: { locale },
+}: {
+  params: { locale: string };
+}) {
+  const articles = Object.entries(articlesData as ArticlesData).map(
+    ([id, article]) => ({
+      id,
+      title: (article[locale] as { title: string; excerpt: string }).title,
+      excerpt: (article[locale] as { title: string; excerpt: string }).excerpt,
+      date: article.date,
+      slug: article.slug,
+    })
+  );
 
   const reversedArticles = [...articles].reverse();
 
+  const titles = {
+    en: "Blog Articles",
+    ja: "ブログ記事",
+  };
+
   return (
     <main className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8">{t("title")}</h1>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <h1 className="text-4xl font-bold mb-8 text-center">
+        {titles[locale as keyof typeof titles]}
+      </h1>
+      <div className="grid gap-6 max-w-2xl mx-auto">
         {reversedArticles.map((article) => (
-          <Card key={article.id}>
-            <CardHeader>
-              <CardTitle>{article.title}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-2">
-                {article.date}
-              </p>
-              <p>{article.excerpt}</p>
-            </CardContent>
-            <CardFooter>
-              <Link href={`/articles/${article.slug}`} passHref>
-                <Button>Read More</Button>
-              </Link>
-            </CardFooter>
-          </Card>
+          <Link key={article.id} href={`/${locale}/articles/${article.slug}`}>
+            <Card className="cursor-pointer hover:shadow-lg hover:scale-[1.005] hover:bg-accent/50 transition-all duration-70">
+              <CardHeader className="pb-2">
+                <CardTitle>{article.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">{article.date}</p>
+                <p>{article.excerpt}</p>
+              </CardContent>
+            </Card>
+          </Link>
         ))}
       </div>
     </main>

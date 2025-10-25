@@ -1,0 +1,26 @@
+{
+  "20241010-firstPost": {
+    "slug": "20241010-firstPost",
+    "date": "2024-10-10",
+    "en": {
+      "title": "First Blog Post",
+      "excerpt": "Created a blog using Next.js with MDX."
+    },
+    "ja": {
+      "title": "最初のブログポスト",
+      "excerpt": "Next.jsをベースにMDXを使ってブログを作りました。"
+    }
+  },
+  "20241013-RLcircuit": {
+    "slug": "20241013-RLcircuit",
+    "date": "2024-10-13",
+    "en": {
+      "title": "Understanding RL Circuit with Square Wave Input",
+      "excerpt": "A simulator for RL circuit"
+    },
+    "ja": {
+      "title": "方形波入力に対するRL回路の理解",
+      "excerpt": "方形波入力に対するRL回路の応答を視覚的に学びます。"
+    }
+  }
+}

@@ -8,22 +8,21 @@ export function ArticleActions() {
 
   return (
     <div className="mt-8 flex items-center justify-between">
-      <Button
-        onClick={() => setLikes(likes + 1)}
-        className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white"
-      >
-        Like({likes})
-      </Button>
-      <Button
-        variant="outline"
-        onClick={() =>
-          alert(
-            "Thank you for your interest! Sharing functionality coming soon."
-          )
-        }
-      >
-        Share
-      </Button>
+      <div className="flex items-center space-x-4">
+        <Button onClick={() => setLikes(likes + 1)} className="button-primary">
+          Like({likes})
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() =>
+            alert(
+              "Thank you for your interest! Sharing functionality coming soon."
+            )
+          }
+        >
+          Share
+        </Button>
+      </div>
     </div>
   );
 }

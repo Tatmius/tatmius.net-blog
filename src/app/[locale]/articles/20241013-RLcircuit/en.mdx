@@ -1,0 +1,13 @@
+import RLCircuitSimulator from "@/app/[locale]/articles/20241013-RLcircuit/rl-circuit-simulator";
+
+When studying the basics of electrical circuits, learning about the response of an RL circuit to a square wave input is helpful for intuitively understanding the characteristics of inductors and transient phenomena. In this article, we will simulate the behavior of current and voltage across the inductor when a square wave is input to an RL circuit, allowing us to visually learn about current rise and fall, energy storage and release in the inductor, and the phase relationship between voltage and current.
+
+## Time Constant
+
+In an RL circuit, the speed of current rise and fall is determined by the time constant $$ \tau $$. The unit of the time constant is [s], and it represents the time it takes to reach 63.2% of the final value.
+
+The time constant is expressed as the product of the inductor's inductance $$L$$ and resistance $$R$$, divided by the resistance $$R$$. When the resistive element is large, the time constant becomes smaller, and the current rise and fall become slower. Conversely, when the inductive element is large, the time constant becomes larger, and the current rise and fall become faster.
+
+Time constant $$ \tau = \frac{L}{R} $$
+
+<RLCircuitSimulator />

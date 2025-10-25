@@ -1,4 +1,4 @@
-import { Link } from "@/i18n/routing";
+import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageToggle } from "@/components/languageToggle";
 
@@ -8,7 +8,7 @@ export function Header() {
       <nav className="container mx-auto px-4 py-6 flex justify-between items-center">
         <ul className="flex space-x-4">
           <li>
-            <Link href="/" className="hover:underline text-foreground">
+            <Link href="/en" className="hover:underline text-foreground">
               HOME
             </Link>
           </li>
