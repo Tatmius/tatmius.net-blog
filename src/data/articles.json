@@ -22,5 +22,17 @@
       "title": "方形波入力に対するRL回路の理解",
       "excerpt": "方形波入力に対するRL回路の応答を視覚的に学びます。"
     }
+  },
+  "20251026-publishThisBlog": {
+    "slug": "20251026-publishThisBlog",
+    "date": "2025-10-26",
+    "en": {
+      "title": "Publish This Blog",
+      "excerpt": "Published this blog to Cloudflare Pages."
+    },
+    "ja": {
+      "title": "このブログを公開しました",
+      "excerpt": "このブログをCloudflare Pagesに公開しました。"
+    }
   }
 }
