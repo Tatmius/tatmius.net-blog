@@ -47,7 +47,7 @@ export default function Home({
       <div className="grid gap-6 max-w-2xl mx-auto">
         {reversedArticles.map((article) => (
           <Link key={article.id} href={`/${locale}/articles/${article.slug}`}>
-            <Card className="cursor-pointer hover:shadow-lg hover:scale-[1.005] hover:bg-accent/50 transition-all duration-70">
+            <Card className="cursor-pointer hover:shadow-lg hover:scale-[1.005] duration-70">
               <CardHeader className="pb-2">
                 <CardTitle>{article.title}</CardTitle>
               </CardHeader>

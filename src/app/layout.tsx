@@ -32,7 +32,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.className} ${notoSansJP.variable}`}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <div className="flex flex-col min-h-screen">
             <Header />
 
