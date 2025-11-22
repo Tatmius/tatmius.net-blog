@@ -34,5 +34,13 @@
       "title": "このブログを公開しました",
       "excerpt": "このブログをCloudflare Pagesに公開しました。"
     }
+  },
+  "20251122-royalAndLoyal": {
+    "slug": "20251122-royalAndLoyal",
+    "date": "2025-11-22",
+    "ja": {
+      "title": "Royal と Loyal",
+      "excerpt": "Royal と Loyal は二つの単語。"
+    }
   }
 }

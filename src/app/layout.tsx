@@ -3,7 +3,6 @@ import { Inter, Noto_Sans_JP } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { HalloweenAnimation } from "@/components/halloween-animation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -41,7 +40,6 @@ export default function RootLayout({
 
             <Footer />
           </div>
-          <HalloweenAnimation />
         </ThemeProvider>
       </body>
     </html>
