@@ -21,7 +21,7 @@ interface ArticlesData {
 
 async function getArticles(locale: string) {
   return Object.entries(articlesData as ArticlesData)
-    .filter(([_, article]) => article[locale])
+    .filter(([, article]) => article[locale])
     .map(([id, article]) => ({
       id,
       slug: article.slug,

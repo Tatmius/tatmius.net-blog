@@ -23,7 +23,7 @@ export default function Home({
   params: { locale: string };
 }) {
   const articles = Object.entries(articlesData as ArticlesData)
-    .filter(([_, article]) => article[locale])
+    .filter(([, article]) => article[locale])
     .map(([id, article]) => ({
       id,
       title: (article[locale] as { title: string; excerpt: string }).title,

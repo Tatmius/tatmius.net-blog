@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 interface Pumpkin {
   id: number;
@@ -276,7 +277,7 @@ export function HalloweenAnimation() {
             willChange: pumpkin.hasStopped ? "auto" : "transform",
           }}
         >
-          <img
+          <Image
             src="/2025halloween.svg"
             alt=""
             width={pumpkin.size}
