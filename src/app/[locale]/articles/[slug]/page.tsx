@@ -20,24 +20,28 @@ interface ArticlesData {
 }
 
 async function getArticles(locale: string) {
-  return Object.entries(articlesData as ArticlesData).map(([id, article]) => ({
-    id,
-    slug: article.slug,
-    title: (article[locale] as { title: string; excerpt: string }).title,
-    date: article.date,
-    excerpt: (article[locale] as { title: string; excerpt: string }).excerpt,
-  }));
+  return Object.entries(articlesData as ArticlesData)
+    .filter(([_, article]) => article[locale])
+    .map(([id, article]) => ({
+      id,
+      slug: article.slug,
+      title: (article[locale] as { title: string; excerpt: string }).title,
+      date: article.date,
+      excerpt: (article[locale] as { title: string; excerpt: string }).excerpt,
+    }));
 }
 
 export async function generateStaticParams() {
-  const articles = Object.keys(articlesData as ArticlesData);
+  const articles = Object.entries(articlesData as ArticlesData);
   const locales = ["en", "ja"];
 
-  return articles.flatMap((slug) =>
-    locales.map((locale) => ({
-      slug,
-      locale,
-    }))
+  return articles.flatMap(([slug, articleData]) =>
+    locales
+      .filter((locale) => articleData[locale])
+      .map((locale) => ({
+        slug,
+        locale,
+      }))
   );
 }
 

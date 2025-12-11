@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { ArticleActions } from "@/components/articleActions";
 import { ArticleTranslationsCard } from "@/components/articleTranslationsCard";
 interface ArticleLayoutProps {
   children: React.ReactNode;
@@ -34,7 +33,6 @@ export function ArticleLayout({
       </time>
       <ArticleTranslationsCard slug={slug} currentLocale={locale} />
       <div>{children}</div>
-      <ArticleActions />
     </article>
   );
 }

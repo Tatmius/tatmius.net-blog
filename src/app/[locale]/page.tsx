@@ -22,15 +22,15 @@ export default function Home({
 }: {
   params: { locale: string };
 }) {
-  const articles = Object.entries(articlesData as ArticlesData).map(
-    ([id, article]) => ({
+  const articles = Object.entries(articlesData as ArticlesData)
+    .filter(([_, article]) => article[locale])
+    .map(([id, article]) => ({
       id,
       title: (article[locale] as { title: string; excerpt: string }).title,
       excerpt: (article[locale] as { title: string; excerpt: string }).excerpt,
       date: article.date,
       slug: article.slug,
-    })
-  );
+    }));
 
   const reversedArticles = [...articles].reverse();
 
