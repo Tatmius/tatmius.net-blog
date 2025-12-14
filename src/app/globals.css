@@ -4,6 +4,7 @@
 
 @layer base {
   :root {
+    color-scheme: light;
     --background: 0 0% 95%;
     --foreground: 222.2 84% 4.9%;
 
@@ -36,6 +37,7 @@
   }
 
   .dark {
+    color-scheme: dark;
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 90%;
 
@@ -135,7 +137,8 @@
     --tw-prose-pre-bg: var(--secondary);
     --tw-prose-th-borders: var(--border);
     --tw-prose-td-borders: var(--border);
-    font-weight: 200;
+    /* Keep dark-mode prose readable on all devices */
+    font-weight: 400;
   }
 
   .prose {
