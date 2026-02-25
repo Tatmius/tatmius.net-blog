@@ -30,6 +30,25 @@ export default function RootLayout({
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
         />
+        {/* Atom feed auto-discovery (browser RSS icon + feed readers) */}
+        <link
+          rel="alternate"
+          type="application/atom+xml"
+          href="https://tatmius.net/feed.xml"
+          title="tatmius.net Blog (all)"
+        />
+        <link
+          rel="alternate"
+          type="application/atom+xml"
+          href="https://tatmius.net/ja/feed.xml"
+          title="tatmius.net ブログ (日本語)"
+        />
+        <link
+          rel="alternate"
+          type="application/atom+xml"
+          href="https://tatmius.net/en/feed.xml"
+          title="tatmius.net Blog (English)"
+        />
       </head>
       <body className={`${inter.className} ${notoSansJP.variable}`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
