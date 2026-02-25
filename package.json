@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3001",
-    "build": "next build",
+    "build": "next build && npx tsx scripts/generate-feeds.ts",
     "start": "next start",
     "lint": "next lint"
   },
@@ -35,6 +35,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "tsx": "^4.19.0",
     "@tailwindcss/typography": "^0.5.15",
     "@types/node": "^20",
     "@types/react": "^18",
