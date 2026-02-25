@@ -21,6 +21,8 @@ export interface AtomEntry {
   title: string;
   updated: string; // RFC 3339
   summary: string;
+  /** When "html", summary may contain markup (e.g. <a href="...">) and is emitted as type="html" */
+  summaryType?: "text" | "html";
   links: AtomEntryLink[];
   published?: string; // RFC 3339, optional
 }
@@ -59,7 +61,8 @@ export function buildAtomFeed(feedMeta: AtomFeedMeta, entries: AtomEntry[]): str
     lines.push(`    <title>${escapeXml(e.title)}</title>`);
     lines.push(`    <updated>${escapeXml(e.updated)}</updated>`);
     if (e.published) lines.push(`    <published>${escapeXml(e.published)}</published>`);
-    lines.push(`    <summary>${escapeXml(e.summary)}</summary>`);
+    const summaryAttrs = e.summaryType === "html" ? ' type="html"' : "";
+    lines.push(`    <summary${summaryAttrs}>${escapeXml(e.summary)}</summary>`);
     for (const link of e.links) {
       const attrs = [
         `href="${escapeXml(link.href)}"`,

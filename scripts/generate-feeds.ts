@@ -39,6 +39,8 @@ function buildAllFeed(): string {
     const preferredLocale = article.ja ? "ja" : "en";
     const meta = article[preferredLocale]!;
     const entryId = `${BASE_URL}/${preferredLocale}/articles/${slug}`;
+    const articleUrl = `${BASE_URL}/${preferredLocale}/articles/${slug}`;
+    const linkText = preferredLocale === "ja" ? "記事を読む" : "Read more";
     const updated = toRfc3339(article.date);
     if (article.date > latestUpdated) latestUpdated = article.date;
     entries.push({
@@ -46,7 +48,8 @@ function buildAllFeed(): string {
       title: meta.title,
       updated,
       published: updated,
-      summary: meta.excerpt,
+      summary: `${meta.excerpt} <a href="${articleUrl}">${linkText}</a>`,
+      summaryType: "html",
       links: locales.map((loc) => ({
         href: `${BASE_URL}/${loc}/articles/${slug}`,
         hreflang: loc,
@@ -76,7 +79,9 @@ function buildLocaleFeed(locale: "ja" | "en"): string {
 
   for (const [slug, article] of sorted) {
     const meta = article[locale]!;
-    const entryId = `${BASE_URL}/${locale}/articles/${slug}`;
+    const articleUrl = `${BASE_URL}/${locale}/articles/${slug}`;
+    const linkText = locale === "ja" ? "記事を読む" : "Read more";
+    const entryId = articleUrl;
     const updated = toRfc3339(article.date);
     if (article.date > latestUpdated) latestUpdated = article.date;
     entries.push({
@@ -84,8 +89,9 @@ function buildLocaleFeed(locale: "ja" | "en"): string {
       title: meta.title,
       updated,
       published: updated,
-      summary: meta.excerpt,
-      links: [{ href: `${BASE_URL}/${locale}/articles/${slug}`, hreflang: locale }],
+      summary: `${meta.excerpt} <a href="${articleUrl}">${linkText}</a>`,
+      summaryType: "html",
+      links: [{ href: articleUrl, hreflang: locale }],
     });
   }
 
@@ -117,6 +123,20 @@ function main() {
     fs.writeFileSync(path.join(dir, "feed.xml"), buildLocaleFeed(locale), "utf-8");
     console.log(`Wrote out/${locale}/feed.xml`);
   }
+
+  // Cloudflare Pages: set Content-Type so browser/readers recognize Atom feeds
+  const headersContent = [
+    "/feed.xml",
+    "  Content-Type: application/atom+xml; charset=utf-8",
+    "",
+    "/ja/feed.xml",
+    "  Content-Type: application/atom+xml; charset=utf-8",
+    "",
+    "/en/feed.xml",
+    "  Content-Type: application/atom+xml; charset=utf-8",
+  ].join("\n");
+  fs.writeFileSync(path.join(outDir, "_headers"), headersContent, "utf-8");
+  console.log("Wrote out/_headers");
 }
 
 main();

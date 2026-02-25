@@ -6,6 +6,7 @@
     "dev": "next dev -p 3001",
     "build": "next build && npx tsx scripts/generate-feeds.ts",
     "start": "next start",
+    "preview": "node scripts/serve-out.mjs",
     "lint": "next lint"
   },
   "dependencies": {
