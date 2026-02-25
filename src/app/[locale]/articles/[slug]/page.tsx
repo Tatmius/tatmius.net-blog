@@ -66,7 +66,7 @@ export async function generateMetadata({
   const languages = Object.fromEntries(
     localeKeys.map((l) => [
       l,
-      `https://tatmius.net/${l}/articles/${params.slug}`,
+      `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://blog.tatmius.net"}/${l}/articles/${params.slug}`,
     ])
   );
   return {

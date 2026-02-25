@@ -10,11 +10,11 @@ export function Footer() {
           </Link>
           {" · "}
           <Link href="/ja/feed.xml" className="underline hover:no-underline">
-            日本語
+            日本語フィード(Atom)
           </Link>
           {" · "}
           <Link href="/en/feed.xml" className="underline hover:no-underline">
-            English
+            English Feed (Atom)
           </Link>
         </p>
         <p>&copy; 2024 tatmius.net All rights reserved.</p>

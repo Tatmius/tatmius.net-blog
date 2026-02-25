@@ -13,7 +13,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
 const outDir = path.join(projectRoot, "out");
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://tatmius.net";
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://blog.tatmius.net";
 
 interface ArticleRecord {
   slug: string;

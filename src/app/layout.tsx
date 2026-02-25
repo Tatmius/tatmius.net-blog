@@ -34,19 +34,19 @@ export default function RootLayout({
         <link
           rel="alternate"
           type="application/atom+xml"
-          href="https://tatmius.net/feed.xml"
+          href={`${process.env.NEXT_PUBLIC_SITE_URL ?? "https://blog.tatmius.net"}/feed.xml`}
           title="tatmius.net Blog (all)"
         />
         <link
           rel="alternate"
           type="application/atom+xml"
-          href="https://tatmius.net/ja/feed.xml"
+          href={`${process.env.NEXT_PUBLIC_SITE_URL ?? "https://blog.tatmius.net"}/ja/feed.xml`}
           title="tatmius.net ブログ (日本語)"
         />
         <link
           rel="alternate"
           type="application/atom+xml"
-          href="https://tatmius.net/en/feed.xml"
+          href={`${process.env.NEXT_PUBLIC_SITE_URL ?? "https://blog.tatmius.net"}/en/feed.xml`}
           title="tatmius.net Blog (English)"
         />
       </head>

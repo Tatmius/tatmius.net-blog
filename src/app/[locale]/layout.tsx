@@ -6,8 +6,8 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     alternates: {
       languages: {
-        en: "https://tatmius.net/en/",
-        ja: "https://tatmius.net/ja/",
+        en: `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://blog.tatmius.net"}/en/`,
+        ja: `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://blog.tatmius.net"}/ja/`,
       },
     },
   };
